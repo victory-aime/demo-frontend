@@ -10,8 +10,8 @@ export default function CreateProduct() {
 
   useEffect(() => {
     if (
-      status == "unauthenticated" ||
-      (status == "authenticated" && !session.roles?.includes("admin"))
+      status === "unauthenticated" ||
+      (status === "authenticated" && !session.roles?.includes("admin"))
     ) {
       router.push("/unauthorized");
       router.refresh();
@@ -23,7 +23,7 @@ export default function CreateProduct() {
 
   const [errorMsg, setErrorMsg] = useState("");
 
-  if (status == "loading") {
+  if (status === "loading") {
     return (
       <main>
         <h1 className="text-4xl text-center">Create product</h1>
@@ -37,17 +37,15 @@ export default function CreateProduct() {
       event.preventDefault();
 
       const postBody = {
-        Name: productNameRef.current.value,
-        Price: parseFloat(priceRef.current.value),
+        name: productNameRef.current.value,
+        price: parseFloat(priceRef.current.value),
       };
 
       try {
         const resp = await fetch("/api/products", {
           method: "POST",
           headers: {
-            headers: {
-              "Content-Type": "application/json",
-            },
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(postBody),
         });

@@ -21,7 +21,8 @@ async function getAllProducts() {
     return data;
   }
 
-  throw new Error("Failed to fetch data. Status: " + resp.status);
+  // Gérez les erreurs spécifiques ici
+  throw new Error(`Failed to fetch data. Status: ${resp.status}`);
 }
 
 export default async function Products() {
@@ -29,15 +30,14 @@ export default async function Products() {
 
   if (session && session.roles?.includes("viewer")) {
     try {
-      const products = await getAllProducts();          
-      
+      const apiResponse = await getAllProducts();
+      const products = apiResponse.data; // Extrait le tableau de produits
 
-      return (        
-        <main>  
-            <SetDynamicRoute></SetDynamicRoute>    
-          <h1 className="text-4xl text-center">Products</h1>
-          <table className="border border-gray-500 text-lg ml-auto mr-auto mt-6">
-            <thead>
+      return (
+          <main>
+            <h1 className="text-4xl text-center">Products</h1>
+            <table className="border border-gray-500 text-lg ml-auto mr-auto mt-6">
+              <thead>
               <tr>
                 <th className="bg-blue-900 p-2 border border-gray-500">Id</th>
                 <th className="bg-blue-900 p-2 border border-gray-500">Name</th>
@@ -45,29 +45,30 @@ export default async function Products() {
                   Price
                 </th>
               </tr>
-            </thead>
-            <tbody>
+              </thead>
+              <tbody>
               {products.map((p) => (
-                <tr key={p.Id}>
-                  <td className="p-1 border border-gray-500">{p.Id}</td>
-                  <td className="p-1 border border-gray-500">{p.Name}</td>
-                  <td className="p-1 border border-gray-500">{p.Price}</td>
-                </tr>
+                  <tr key={p.id}>
+                    <td className="p-1 border border-gray-500">{p.id}</td>
+                    <td className="p-1 border border-gray-500">{p.name}</td>
+                    <td className="p-1 border border-gray-500">{p.price} DT</td>
+                  </tr>
               ))}
-            </tbody>
-          </table>
-        </main>
+              </tbody>
+            </table>
+          </main>
       );
     } catch (err) {
       console.error(err);
 
+      // Affichez l'erreur spécifique ici
       return (
-        <main>
-          <h1 className="text-4xl text-center">Products</h1>
-          <p className="text-red-600 text-center text-lg">
-            Sorry, an error happened. Check the server logs.
-          </p>
-        </main>
+          <main>
+            <h1 className="text-4xl text-center">Products</h1>
+            <p className="text-red-600 text-center text-lg">
+              {err.message} {/* Affichez l'erreur spécifique */}
+            </p>
+          </main>
       );
     }
   }

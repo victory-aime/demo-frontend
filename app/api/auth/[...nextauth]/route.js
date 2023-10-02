@@ -58,7 +58,6 @@ export const authOptions = {
         try {
           const refreshedToken = await refreshAccessToken(token);
           console.log("Token is refreshed.")
-          console.log(refreshedToken)
           return refreshedToken;
         } catch (error) {
           console.error("Error refreshing access token", error);
